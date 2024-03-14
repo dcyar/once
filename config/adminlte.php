@@ -340,7 +340,7 @@ return [
         ],
         [
             'text' => 'Productos',
-            'url' => '#',
+            'route' => 'panel.productos.index',
             'icon' => 'fas fa-fw fa-box',
         ],
         ['header' => 'account_settings'],

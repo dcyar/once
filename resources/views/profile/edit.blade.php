@@ -2,7 +2,7 @@
 
 {{-- Push extra CSS --}}
 @push('css')
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/tailwind.css', 'resources/js/app.js'])
 @endpush
 
 {{-- Customize layout sections --}}
