@@ -317,7 +317,7 @@ return [
         ],
         [
             'text' => 'Inicio',
-            'route' => 'dashboard',
+            'route' => 'panel.dashboard',
             'icon' => 'fas fa-home',
             // 'label' => 4,
             // 'label_color' => 'success',
@@ -346,7 +346,7 @@ return [
         ['header' => 'account_settings'],
         [
             'text' => 'profile',
-            'route' => 'profile.edit',
+            'route' => 'panel.profile.edit',
             'icon' => 'fas fa-fw fa-user',
         ],
         // [
