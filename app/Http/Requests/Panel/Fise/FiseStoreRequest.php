@@ -20,7 +20,7 @@ class FiseStoreRequest extends FormRequest {
     public function rules(): array {
         return [
             'client_id'       => ['required', 'integer', 'exists:clients,id'],
-            'code'            => ['required', 'string', 'max:12', 'unique:fises'],
+            'code'            => ['required', 'string', 'min:12', 'max:12', 'unique:fises'],
             'amount'          => ['required', 'integer', 'min:1'],
             'expiration_date' => ['required', 'date'],
             'is_active'       => ['required', 'boolean'],

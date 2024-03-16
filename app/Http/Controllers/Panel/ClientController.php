@@ -42,7 +42,7 @@ class ClientController extends Controller {
 
         $clients = Client::query()
             ->select(['id', 'name as text'])
-            ->where('name', 'LIKE', "%{$search}%")
+            ->whereAny(['name', 'dni'], 'LIKE', "%{$search}%")
             ->get();
 
         return response()->json([

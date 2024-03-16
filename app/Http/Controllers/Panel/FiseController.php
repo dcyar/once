@@ -28,7 +28,7 @@ class FiseController extends Controller {
                 $query
                     ->whereAny(['code', 'expiration_date'], 'LIKE', "%{$search}%")
                     ->orWhereHas('client', function ($query) use ($search) {
-                        $query->where('name', 'LIKE', "%{$search}%");
+                        $query->whereAny(['name', 'dni'], 'LIKE', "%{$search}%");
                     });
             })
             ->orderBy($orderColumn, $orderDirection)

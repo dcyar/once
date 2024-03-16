@@ -34,7 +34,7 @@
                     <form>
                         @csrf
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel" x-text="title"></h5>
+                            <h5 class="modal-title font-weight-bold" id="exampleModalLabel" x-text="title"></h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -203,8 +203,8 @@
                             text: "¡No podrás revertir esto!",
                             icon: 'warning',
                             showCancelButton: true,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
+                            cancelButtonColor: '#3085d6',
+                            confirmButtonColor: '#d33',
                             confirmButtonText: 'Sí, bórralo',
                             cancelButtonText: 'Cancelar',
                         }).then((result) => {

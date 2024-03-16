@@ -18,6 +18,7 @@
                         <th>ID</th>
                         <th>Código</th>
                         <th>Cliente</th>
+                        <th>DNI</th>
                         <th>Monto</th>
                         <th>Expiración</th>
                         <th>Activo</th>
@@ -35,7 +36,7 @@
                     <form>
                         @csrf
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel" x-text="title"></h5>
+                            <h5 class="modal-title font-weight-bold" id="exampleModalLabel" x-text="title"></h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -44,15 +45,16 @@
                             <div class="form-group">
                                 <label for="code">Código:</label>
                                 <input x-model="form.code" type="text" class="form-control"
-                                    :class="{ 'is-invalid': errors?.code }" id="code" name="code" maxlength="8"
-                                    min="0" :readonly="show" />
+                                    :class="{ 'is-invalid': errors?.code }" id="code" name="code" maxlength="12"
+                                    minlength="12" :readonly="show" />
                                 <template x-if="errors?.code">
                                     <div class="invalid-feedback" x-text="errors.code[0]"></div>
                                 </template>
                             </div>
                             <div class="form-group">
                                 <label for="client_id">Cliente:</label>
-                                <select name="client_id" id="client_id" :disabled="show"></select>
+                                <select x-model="form.client_id" name="client_id" id="client_id"
+                                    :class="{ 'is-invalid': errors?.client_id }" :disabled="show"></select>
                                 <template x-if="errors?.client_id">
                                     <div class="invalid-feedback" x-text="errors.client_id[0]"></div>
                                 </template>
@@ -75,6 +77,14 @@
                                 <template x-if="errors?.expiration_date">
                                     <div class="invalid-feedback" x-text="errors.expiration_date[0]"></div>
                                 </template>
+                            </div>
+                            <div class="form-group">
+                                <div class="custom-control custom-switch">
+                                    <input x-model="form.is_active" type="checkbox" class="custom-control-input"
+                                        id="is_active" :disabled="show" />
+                                    <label class="custom-control-label" for="is_active"
+                                        x-text="form.is_active ? 'Activo' : 'Canjeado'"></label>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -101,10 +111,14 @@
                         searchable: false
                     },
                     {
-                        data: 'code'
+                        data: 'code',
                     },
                     {
                         data: 'client.name',
+                        orderable: false
+                    },
+                    {
+                        data: 'client.dni',
                         orderable: false
                     },
                     {
@@ -145,6 +159,8 @@
             });
 
             $('#client_id').select2({
+                // minimumInputLength: 2,
+                language: 'es',
                 dropdownParent: $('#formModal'),
                 placeholder: 'Selecciona un cliente',
                 theme: 'bootstrap4',
@@ -152,7 +168,7 @@
                     url: '{{ route('panel.clientes.ajax-select') }}',
                     delay: 500,
                     dataType: 'json',
-                }
+                },
             });
         });
 
@@ -169,6 +185,7 @@
                     client_id: null,
                     amount: 0,
                     expiration_date: '',
+                    is_active: true,
                 },
                 errors: null,
                 init() {
@@ -188,6 +205,8 @@
                             this.form.client_id = '';
                             this.form.amount = 0;
                             this.form.expiration_date = '';
+                            this.form.is_active = true;
+                            $('#client_id').val(null).trigger('change');
                             this.modal.show();
                             return;
                         }
@@ -201,10 +220,17 @@
 
                         this.method = actionAttr === 'edit' ? 'PUT' : 'GET';
                         this.show = actionAttr === 'show' ? true : false;
-                        this.form.code = this.title = data.code;
-                        this.form.client_id = data.client_id;
+                        this.title = 'FISE: ' + data.code;
+                        this.form.code = data.code;
                         this.form.amount = data.amount;
+                        this.form.client_id = data.client.id;
                         this.form.expiration_date = data.expiration_date;
+                        this.form.is_active = data.is_active;
+
+                        const clientOption = new Option(data.client.name, data.client.id, true,
+                            true);
+                        $('#client_id').append(clientOption).trigger('change');
+
 
                         this.modal.show();
                     });
@@ -214,14 +240,13 @@
 
                         const data = $('#datatable').DataTable().row($(event.currentTarget)
                             .parents('tr')).data();
-
                         Swal.fire({
                             title: '¿Estás seguro?',
                             text: "¡No podrás revertir esto!",
                             icon: 'warning',
                             showCancelButton: true,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
+                            cancelButtonColor: '#3085d6',
+                            confirmButtonColor: '#d33',
                             confirmButtonText: 'Sí, bórralo',
                             cancelButtonText: 'Cancelar',
                         }).then((result) => {
@@ -237,6 +262,10 @@
                                     });
                             }
                         });
+                    });
+
+                    $('#client_id').on('select2:select', (event) => {
+                        this.form.client_id = parseInt(event.target.value);
                     });
                 },
                 sendForm() {

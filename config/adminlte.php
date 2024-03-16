@@ -415,6 +415,11 @@ return [
                     'location' => '/vendor/select2/js/select2.min.js',
                 ],
                 [
+                    'type'     => 'js',
+                    'asset'    => false,
+                    'location' => '/vendor/select2/js/i18n/es.js',
+                ],
+                [
                     'type'     => 'css',
                     'asset'    => false,
                     'location' => '/vendor/select2/css/select2.min.css',
@@ -442,7 +447,7 @@ return [
                 [
                     'type'     => 'js',
                     'asset'    => false,
-                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@8',
+                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@11',
                 ],
             ],
         ],
