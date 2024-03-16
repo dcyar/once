@@ -4,15 +4,14 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 @endpush
 
-@section('subtitle', 'Productos')
-@section('content_header_title', 'Productos')
+@section('subtitle', 'Clientes')
+@section('content_header_title', 'Clientes')
 
 @section('content_body')
     <div id="products" class="card">
         <div class="card-header">
-            {{-- <h3 class="card-title">Listado de productos</h3> --}}
             <div class="card-tools">
-                <button class="btn btn-primary showModal" data-action="create">Nuevo producto</button>
+                <button class="btn btn-primary showModal" data-action="create">Nuevo cliente</button>
             </div>
         </div>
 
@@ -22,9 +21,9 @@
                     <tr>
                         <th>ID</th>
                         <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th>Precio</th>
-                        <th>Stock</th>
+                        <th>DNI</th>
+                        <th>Dirección</th>
+                        <th>Teléfono</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -55,29 +54,30 @@
                                 </template>
                             </div>
                             <div class="form-group">
-                                <label for="description">Descripción:</label>
-                                <textarea x-model="form.description" class="form-control" :class="{ 'is-invalid': errors?.description }"
-                                    id="description" name="description" :readonly="show"></textarea>
-                                <template x-if="errors?.description">
-                                    <div class="invalid-feedback" x-text="errors.description[0]"></div>
+                                <label for="dni">DNI:</label>
+                                <input x-model="form.dni" type="text" class="form-control"
+                                    :class="{ 'is-invalid': errors?.dni }" id="dni" name="dni" maxlength="8"
+                                    min="0" :readonly="show" />
+                                <template x-if="errors?.dni">
+                                    <div class="invalid-feedback" x-text="errors.dni[0]"></div>
                                 </template>
                             </div>
                             <div class="form-group">
-                                <label for="price">Precio:</label>
-                                <input x-model="form.price" type="number" class="form-control"
-                                    :class="{ 'is-invalid': errors?.price }" id="price" name="price" step="0.5"
+                                <label for="address">Dirección:</label>
+                                <input x-model="form.address" type="text" class="form-control"
+                                    :class="{ 'is-invalid': errors?.address }" id="address" name="address" step="0.5"
                                     min="0" :readonly="show" />
-                                <template x-if="errors?.price">
-                                    <div class="invalid-feedback" x-text="errors.price[0]"></div>
+                                <template x-if="errors?.address">
+                                    <div class="invalid-feedback" x-text="errors.address[0]"></div>
                                 </template>
                             </div>
                             <div class="form-group">
-                                <label for="stock">Stock:</label>
-                                <input x-model="form.stock" type="number" class="form-control"
-                                    :class="{ 'is-invalid': errors?.stock }" id="stock" name="stock" step="1"
+                                <label for="phone">Teléfono:</label>
+                                <input x-model="form.phone" type="text" class="form-control"
+                                    :class="{ 'is-invalid': errors?.phone }" id="phone" name="phone" step="1"
                                     min="0" :readonly="show" />
-                                <template x-if="errors?.stock">
-                                    <div class="invalid-feedback" x-text="errors.stock[0]"></div>
+                                <template x-if="errors?.phone">
+                                    <div class="invalid-feedback" x-text="errors.phone[0]"></div>
                                 </template>
                             </div>
                         </div>
@@ -99,7 +99,7 @@
     <script>
         $(document).ready(function() {
             $('#datatable').DataTable({
-                ajax: "{{ route('panel.productos.ajax') }}",
+                ajax: "{{ route('panel.clientes.ajax') }}",
                 columns: [{
                         data: 'id',
                         searchable: false
@@ -108,16 +108,16 @@
                         data: 'name'
                     },
                     {
-                        data: 'description',
+                        data: 'dni',
                         orderable: false
                     },
                     {
-                        data: 'price',
+                        data: 'address',
                         searchable: false,
                         orderable: false
                     },
                     {
-                        data: 'stock',
+                        data: 'phone',
                         searchable: false,
                         orderable: false
                     },
@@ -153,9 +153,9 @@
                 title: '',
                 form: {
                     name: '',
-                    description: '',
-                    price: 0,
-                    stock: 0,
+                    dni: '',
+                    address: '',
+                    phone: '',
                 },
                 errors: null,
                 init() {
@@ -167,14 +167,14 @@
                         const actionAttr = event.currentTarget.dataset.action;
 
                         if (actionAttr === 'create') {
-                            this.action = '{{ route('panel.productos.store') }}';
+                            this.action = '{{ route('panel.clientes.store') }}';
                             this.method = 'POST';
                             this.show = false;
-                            this.title = 'Nuevo Producto';
+                            this.title = 'Nuevo Cliente';
                             this.form.name = '';
-                            this.form.description = '';
-                            this.form.price = 0;
-                            this.form.stock = 0;
+                            this.form.dni = '';
+                            this.form.address = '';
+                            this.form.phone = '';
                             this.modal.show();
                             return;
                         }
@@ -183,21 +183,22 @@
                             .parents('tr')).data();
 
                         this.action = actionAttr === 'edit' ?
-                            '{{ route('panel.productos.index') }}/' + data.id :
+                            '{{ route('panel.clientes.index') }}/' + data.id :
                             '';
 
                         this.method = actionAttr === 'edit' ? 'PUT' : 'GET';
                         this.show = actionAttr === 'show' ? true : false;
                         this.form.name = this.title = data.name;
-                        this.form.description = data.description;
-                        this.form.price = data.price;
-                        this.form.stock = data.stock;
+                        this.form.dni = data.dni;
+                        this.form.address = data.address;
+                        this.form.phone = data.phone;
 
                         this.modal.show();
                     });
 
                     $('#products').on('click', '.deleteModal', (event) => {
                         this.errors = null;
+
                         const data = $('#datatable').DataTable().row($(event.currentTarget)
                             .parents('tr')).data();
 
@@ -212,7 +213,7 @@
                             cancelButtonText: 'Cancelar',
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                axios.delete('{{ route('panel.productos.index') }}/' +
+                                axios.delete('{{ route('panel.clientes.index') }}/' +
                                         data.id)
                                     .then(response => {
                                         Swal.fire('Eliminado', response.data

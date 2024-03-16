@@ -329,9 +329,9 @@ return [
             'icon' => 'fas fa-fw fa-shopping-cart',
         ],
         [
-            'text' => 'Clientes',
-            'url'  => '#',
-            'icon' => 'fas fa-fw fa-user',
+            'text'  => 'Clientes',
+            'route' => 'panel.clientes.index',
+            'icon'  => 'fas fa-fw fa-user',
         ],
         [
             'text' => 'Fise',
