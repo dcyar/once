@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('code', 12)->unique();
             $table->integer('amount');
             $table->date('expiration_date');
-            $table->boolean('is_active')->default(true);
+            $table->date('used_at')->nullable();
 
             $table->timestamps();
         });

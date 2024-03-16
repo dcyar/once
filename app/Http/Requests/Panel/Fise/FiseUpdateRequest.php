@@ -25,6 +25,13 @@ class FiseUpdateRequest extends FormRequest {
             'amount'          => ['required', 'integer', 'min:1'],
             'expiration_date' => ['required', 'date'],
             'is_active'       => ['required', 'boolean'],
+            'used_at'         => ['nullable', 'date'],
         ];
+    }
+
+    public function prepareForValidation() {
+        $this->merge([
+            'used_at' => $this->boolean('is_active') ? null : now()->toDateTimeString(),
+        ]);
     }
 }

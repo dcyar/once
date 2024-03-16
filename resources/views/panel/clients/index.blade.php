@@ -114,9 +114,8 @@
                         orderable: false,
                         render: function(data, type, row) {
                             return `
-                                <span class="badge badge-secondary">${data}</span>
+                                <span class="badge badge-dark">${data}</span>
                                 <span class="badge badge-success">${row.active_fises_count}</span>
-                                <span class="badge badge-danger">${row.used_fises_count}</span>
                             `;
                         }
                     },

@@ -14,13 +14,13 @@ class Fise extends Model {
         'code',
         'amount',
         'expiration_date',
-        'is_active',
+        'used_at',
     ];
 
     protected function casts(): array {
         return [
             'expiration_date' => 'date:Y-m-d',
-            'is_active'       => 'boolean',
+            'used_at'         => 'datetime',
         ];
     }
 

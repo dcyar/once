@@ -23,7 +23,7 @@ class FiseController extends Controller {
 
         $paginator = Fise::query()
             ->with('client')
-            ->select(['id', 'code', 'client_id', 'amount', 'expiration_date', 'is_active'])
+            ->select(['id', 'code', 'client_id', 'amount', 'expiration_date', 'used_at'])
             ->when($search, function ($query, $search) {
                 $query
                     ->whereAny(['code', 'expiration_date'], 'LIKE', "%{$search}%")
@@ -51,10 +51,12 @@ class FiseController extends Controller {
     }
 
     public function update(FiseUpdateRequest $request, Fise $fise) {
+        // dd($request->validated());
         $fise->update($request->validated());
 
         return response()->json([
             'message' => 'El fise ha sido actualizado correctamente.',
+            'fise'    => $fise,
         ]);
     }
 

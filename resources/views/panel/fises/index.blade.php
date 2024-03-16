@@ -131,10 +131,11 @@
                         data: 'expiration_date',
                     },
                     {
-                        data: 'is_active',
+                        data: 'used_at',
                         searchable: false,
                         render: function(data, type, row) {
-                            return data ? '<span class="badge badge-success">Activo</span>' :
+                            console.log(data);
+                            return !data ? '<span class="badge badge-success">Activo</span>' :
                                 '<span class="badge badge-danger">Canjeado</span>';
                         }
                     },
@@ -226,7 +227,7 @@
                         this.form.amount = data.amount;
                         this.form.client_id = data.client.id;
                         this.form.expiration_date = data.expiration_date;
-                        this.form.is_active = data.is_active;
+                        this.form.is_active = data.used_at ? true : false;
 
                         const clientOption = new Option(data.client.name, data.client.id, true,
                             true);
