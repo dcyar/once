@@ -1,13 +1,13 @@
 @extends('layouts.adminlte')
 
-@section('subtitle', 'Clientes')
-@section('content_header_title', 'Clientes')
+@section('subtitle', 'Fises')
+@section('content_header_title', 'Fises')
 
 @section('content_body')
     <div id="products" class="card">
         <div class="card-header">
             <div class="card-tools">
-                <button class="btn btn-primary showModal" data-action="create">Nuevo cliente</button>
+                <button class="btn btn-primary showModal" data-action="create">Nuevo fise</button>
             </div>
         </div>
 
@@ -16,10 +16,11 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Nombre</th>
-                        <th>DNI</th>
-                        <th>Dirección</th>
-                        <th>Teléfono</th>
+                        <th>Código</th>
+                        <th>Cliente</th>
+                        <th>Monto</th>
+                        <th>Expiración</th>
+                        <th>Activo</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -41,39 +42,38 @@
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="name">Nombre:</label>
-                                <input x-model="form.name" type="text" class="form-control"
-                                    :class="{ 'is-invalid': errors?.name }" id="name" name="name"
-                                    :readonly="show" />
-                                <template x-if="errors?.name">
-                                    <div class="invalid-feedback" x-text="errors.name[0]"></div>
+                                <label for="code">Código:</label>
+                                <input x-model="form.code" type="text" class="form-control"
+                                    :class="{ 'is-invalid': errors?.code }" id="code" name="code" maxlength="8"
+                                    min="0" :readonly="show" />
+                                <template x-if="errors?.code">
+                                    <div class="invalid-feedback" x-text="errors.code[0]"></div>
                                 </template>
                             </div>
                             <div class="form-group">
-                                <label for="dni">DNI:</label>
-                                <input x-model="form.dni" type="text" class="form-control"
-                                    :class="{ 'is-invalid': errors?.dni }" id="dni" name="dni" maxlength="8"
-                                    min="0" :readonly="show" />
-                                <template x-if="errors?.dni">
-                                    <div class="invalid-feedback" x-text="errors.dni[0]"></div>
+                                <label for="client_id">Cliente:</label>
+                                <select name="client_id" id="client_id" :disabled="show"></select>
+                                <template x-if="errors?.client_id">
+                                    <div class="invalid-feedback" x-text="errors.client_id[0]"></div>
                                 </template>
                             </div>
                             <div class="form-group">
-                                <label for="address">Dirección:</label>
-                                <input x-model="form.address" type="text" class="form-control"
-                                    :class="{ 'is-invalid': errors?.address }" id="address" name="address" step="0.5"
+                                <label for="amount">Monto:</label>
+                                <input x-model="form.amount" type="number" class="form-control"
+                                    :class="{ 'is-invalid': errors?.amount }" id="amount" name="amount" step="1"
                                     min="0" :readonly="show" />
-                                <template x-if="errors?.address">
-                                    <div class="invalid-feedback" x-text="errors.address[0]"></div>
+                                <template x-if="errors?.amount">
+                                    <div class="invalid-feedback" x-text="errors.amount[0]"></div>
                                 </template>
                             </div>
+
                             <div class="form-group">
-                                <label for="phone">Teléfono:</label>
-                                <input x-model="form.phone" type="text" class="form-control"
-                                    :class="{ 'is-invalid': errors?.phone }" id="phone" name="phone" step="1"
-                                    min="0" :readonly="show" />
-                                <template x-if="errors?.phone">
-                                    <div class="invalid-feedback" x-text="errors.phone[0]"></div>
+                                <label for="expiration_date">Fecha de expiración:</label>
+                                <input x-model="form.expiration_date" type="date" class="form-control"
+                                    :class="{ 'is-invalid': errors?.expiration_date }" id="expiration_date"
+                                    name="expiration_date" :readonly="show" />
+                                <template x-if="errors?.expiration_date">
+                                    <div class="invalid-feedback" x-text="errors.expiration_date[0]"></div>
                                 </template>
                             </div>
                         </div>
@@ -95,27 +95,33 @@
     <script>
         $(document).ready(function() {
             $('#datatable').DataTable({
-                ajax: "{{ route('panel.clientes.ajax') }}",
+                ajax: "{{ route('panel.fises.ajax') }}",
                 columns: [{
                         data: 'id',
                         searchable: false
                     },
                     {
-                        data: 'name'
+                        data: 'code'
                     },
                     {
-                        data: 'dni',
+                        data: 'client.name',
                         orderable: false
                     },
                     {
-                        data: 'address',
+                        data: 'amount',
                         searchable: false,
                         orderable: false
                     },
                     {
-                        data: 'phone',
+                        data: 'expiration_date',
+                    },
+                    {
+                        data: 'is_active',
                         searchable: false,
-                        orderable: false
+                        render: function(data, type, row) {
+                            return data ? '<span class="badge badge-success">Activo</span>' :
+                                '<span class="badge badge-danger">Canjeado</span>';
+                        }
                     },
                     {
                         data: null,
@@ -137,6 +143,17 @@
                 processing: true,
                 serverSide: true,
             });
+
+            $('#client_id').select2({
+                dropdownParent: $('#formModal'),
+                placeholder: 'Selecciona un cliente',
+                theme: 'bootstrap4',
+                ajax: {
+                    url: '{{ route('panel.clientes.ajax-select') }}',
+                    delay: 500,
+                    dataType: 'json',
+                }
+            });
         });
 
         document.addEventListener('alpine:init', () => {
@@ -148,10 +165,10 @@
                 method: 'POST',
                 title: '',
                 form: {
-                    name: '',
-                    dni: '',
-                    address: '',
-                    phone: '',
+                    code: '',
+                    client_id: null,
+                    amount: 0,
+                    expiration_date: '',
                 },
                 errors: null,
                 init() {
@@ -163,14 +180,14 @@
                         const actionAttr = event.currentTarget.dataset.action;
 
                         if (actionAttr === 'create') {
-                            this.action = '{{ route('panel.clientes.store') }}';
+                            this.action = '{{ route('panel.fises.store') }}';
                             this.method = 'POST';
                             this.show = false;
-                            this.title = 'Nuevo Cliente';
-                            this.form.name = '';
-                            this.form.dni = '';
-                            this.form.address = '';
-                            this.form.phone = '';
+                            this.title = 'Nuevo Fise';
+                            this.form.code = '';
+                            this.form.client_id = '';
+                            this.form.amount = 0;
+                            this.form.expiration_date = '';
                             this.modal.show();
                             return;
                         }
@@ -179,15 +196,15 @@
                             .parents('tr')).data();
 
                         this.action = actionAttr === 'edit' ?
-                            '{{ route('panel.clientes.index') }}/' + data.id :
+                            '{{ route('panel.fises.index') }}/' + data.id :
                             '';
 
                         this.method = actionAttr === 'edit' ? 'PUT' : 'GET';
                         this.show = actionAttr === 'show' ? true : false;
-                        this.form.name = this.title = data.name;
-                        this.form.dni = data.dni;
-                        this.form.address = data.address;
-                        this.form.phone = data.phone;
+                        this.form.code = this.title = data.code;
+                        this.form.client_id = data.client_id;
+                        this.form.amount = data.amount;
+                        this.form.expiration_date = data.expiration_date;
 
                         this.modal.show();
                     });
@@ -209,7 +226,7 @@
                             cancelButtonText: 'Cancelar',
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                axios.delete('{{ route('panel.clientes.index') }}/' +
+                                axios.delete('{{ route('panel.fises.index') }}/' +
                                         data.id)
                                     .then(response => {
                                         Swal.fire('Eliminado', response.data

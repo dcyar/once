@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Panel\Client\ClientStoreRequest;
-use App\Http\Requests\Panel\Client\ClientUpdateRequest;
-use App\Models\Client;
+use App\Http\Requests\Panel\Fise\FiseStoreRequest;
+use App\Http\Requests\Panel\Fise\FiseUpdateRequest;
+use App\Models\Fise;
 use Illuminate\Http\Request;
 
-class ClientController extends Controller {
+class FiseController extends Controller {
     public function index() {
-        return view('panel.clients.index');
+        return view('panel.fises.index');
     }
 
     public function ajax(Request $request) {
@@ -21,10 +21,15 @@ class ClientController extends Controller {
         $orderColumn      = $request->input("columns.{$orderColumnIndex}.data");
         $orderDirection   = $request->input('order.0.dir', 'desc');
 
-        $paginator = Client::query()
-            ->select(['id', 'name', 'dni', 'address', 'phone'])
+        $paginator = Fise::query()
+            ->with('client')
+            ->select(['id', 'code', 'client_id', 'amount', 'expiration_date', 'is_active'])
             ->when($search, function ($query, $search) {
-                $query->whereAny(['name', 'dni'], 'LIKE', "%{$search}%");
+                $query
+                    ->whereAny(['code', 'expiration_date'], 'LIKE', "%{$search}%")
+                    ->orWhereHas('client', function ($query) use ($search) {
+                        $query->where('name', 'LIKE', "%{$search}%");
+                    });
             })
             ->orderBy($orderColumn, $orderDirection)
             ->paginate(perPage: $perPage, page: $page);
@@ -37,40 +42,27 @@ class ClientController extends Controller {
         ]);
     }
 
-    public function ajaxSelect(Request $request) {
-        $search = $request->input('q', '');
-
-        $clients = Client::query()
-            ->select(['id', 'name as text'])
-            ->where('name', 'LIKE', "%{$search}%")
-            ->get();
+    public function store(FiseStoreRequest $request) {
+        Fise::create($request->validated());
 
         return response()->json([
-            'results' => $clients,
+            'message' => 'El fise ha sido creado correctamente.',
         ]);
     }
 
-    public function store(ClientStoreRequest $request) {
-        Client::create($request->validated());
+    public function update(FiseUpdateRequest $request, Fise $fise) {
+        $fise->update($request->validated());
 
         return response()->json([
-            'message' => 'El cliente ha sido creado correctamente.',
+            'message' => 'El fise ha sido actualizado correctamente.',
         ]);
     }
 
-    public function update(ClientUpdateRequest $request, Client $client) {
-        $client->update($request->validated());
+    public function destroy(Fise $fise) {
+        $fise->delete();
 
         return response()->json([
-            'message' => 'El cliente ha sido actualizado correctamente.',
-        ]);
-    }
-
-    public function destroy(Client $client) {
-        $client->delete();
-
-        return response()->json([
-            'message' => 'El cliente ha sido eliminado correctamente.',
+            'message' => 'El fise ha sido eliminado correctamente.',
         ]);
     }
 }

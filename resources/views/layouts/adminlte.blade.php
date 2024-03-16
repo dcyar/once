@@ -11,9 +11,7 @@
 
 {{-- Add common CSS customizations --}}
 @prepend('css')
-    <style>
-        /* Add your custom styles here */
-    </style>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 @endprepend
 
 {{-- Extend and customize the page content header --}}
@@ -54,7 +52,11 @@
 @prepend('js')
     <script>
         $(document).ready(function() {
-            // Add your common script logic here...
+            $.extend(true, $.fn.dataTable.defaults, {
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/2.0.2/i18n/es-ES.json'
+                }
+            });
         });
     </script>
 @endprepend

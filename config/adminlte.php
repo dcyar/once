@@ -334,9 +334,9 @@ return [
             'icon'  => 'fas fa-fw fa-user',
         ],
         [
-            'text' => 'Fise',
-            'url'  => '#',
-            'icon' => 'fas fa-fw fa-file',
+            'text'  => 'Fise',
+            'route' => 'panel.fises.index',
+            'icon'  => 'fas fa-fw fa-file',
         ],
         [
             'text'  => 'Productos',
@@ -349,50 +349,6 @@ return [
             'route' => 'panel.profile.edit',
             'icon'  => 'fas fa-fw fa-user',
         ],
-        // [
-        //     'text' => 'multilevel',
-        //     'icon' => 'fas fa-fw fa-share',
-        //     'submenu' => [
-        //         [
-        //             'text' => 'level_one',
-        //             'url' => '#',
-        //         ],
-        //         [
-        //             'text' => 'level_one',
-        //             'url' => '#',
-        //             'submenu' => [
-        //                 [
-        //                     'text' => 'level_two',
-        //                     'url' => '#',
-        //                 ],
-        //                 [
-        //                     'text' => 'level_two',
-        //                     'url' => '#',
-        //                     'submenu' => [
-        //                         [
-        //                             'text' => 'level_three',
-        //                             'url' => '#',
-        //                         ],
-        //                         [
-        //                             'text' => 'level_three',
-        //                             'url' => '#',
-        //                         ],
-        //                     ],
-        //                 ],
-        //             ],
-        //         ],
-        //         [
-        //             'text' => 'level_one',
-        //             'url' => '#',
-        //         ],
-        //     ],
-        // ],
-        // ['header' => 'labels'],
-        // [
-        //     'text' => 'important',
-        //     'icon_color' => 'red',
-        //     'url' => '#',
-        // ],
     ],
 
     /*
@@ -431,7 +387,7 @@ return [
 
     'plugins' => [
         'Datatables' => [
-            'active' => false,
+            'active' => true,
             'files'  => [
                 [
                     'type'     => 'js',
@@ -451,17 +407,22 @@ return [
             ],
         ],
         'Select2' => [
-            'active' => false,
+            'active' => true,
             'files'  => [
                 [
                     'type'     => 'js',
-                    'asset'    => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js',
+                    'asset'    => true,
+                    'location' => '/vendor/select2/js/select2.min.js',
                 ],
                 [
                     'type'     => 'css',
                     'asset'    => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css',
+                    'location' => '/vendor/select2/css/select2.min.css',
+                ],
+                [
+                    'type'     => 'css',
+                    'asset'    => false,
+                    'location' => '/vendor/select2-bootstrap4-theme/select2-bootstrap4.min.css',
                 ],
             ],
         ],
@@ -476,7 +437,7 @@ return [
             ],
         ],
         'Sweetalert2' => [
-            'active' => false,
+            'active' => true,
             'files'  => [
                 [
                     'type'     => 'js',

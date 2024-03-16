@@ -1,9 +1,5 @@
 @extends('layouts.adminlte')
 
-@push('css')
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-@endpush
-
 @section('subtitle', 'Productos')
 @section('content_header_title', 'Productos')
 
