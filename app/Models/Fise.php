@@ -20,7 +20,7 @@ class Fise extends Model {
     protected function casts(): array {
         return [
             'expiration_date' => 'date:Y-m-d',
-            'used_at'         => 'datetime',
+            'used_at'         => 'date:Y-m-d',
         ];
     }
 

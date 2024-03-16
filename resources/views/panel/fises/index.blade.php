@@ -20,8 +20,8 @@
                         <th>Cliente</th>
                         <th>DNI</th>
                         <th>Monto</th>
-                        <th>Expiración</th>
                         <th>Activo</th>
+                        <th>Expiración</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -83,7 +83,7 @@
                                     <input x-model="form.is_active" type="checkbox" class="custom-control-input"
                                         id="is_active" :disabled="show" />
                                     <label class="custom-control-label" for="is_active"
-                                        x-text="form.is_active ? 'Activo' : 'Canjeado'"></label>
+                                        x-text="form.is_active ? 'Canjeado' : 'Disponible'"></label>
                                 </div>
                             </div>
                         </div>
@@ -125,19 +125,22 @@
                     {
                         data: 'amount',
                         searchable: false,
-                        orderable: false
-                    },
-                    {
-                        data: 'expiration_date',
+                        orderable: false,
+                        render: function(data, type, row) {
+                            return 'S/. ' + data;
+                        },
                     },
                     {
                         data: 'used_at',
                         searchable: false,
                         render: function(data, type, row) {
-                            console.log(data);
-                            return !data ? '<span class="badge badge-success">Activo</span>' :
-                                '<span class="badge badge-danger">Canjeado</span>';
+                            return data === null ?
+                                '<span class="badge badge-success">Disponible</span>' :
+                                `<span class="badge badge-danger">${data}</span>`;
                         }
+                    },
+                    {
+                        data: 'expiration_date',
                     },
                     {
                         data: null,
@@ -187,7 +190,7 @@
                     client_id: null,
                     amount: 0,
                     expiration_date: '',
-                    is_active: true,
+                    is_active: false,
                 },
                 errors: null,
                 init() {
@@ -207,7 +210,6 @@
                             this.form.client_id = '';
                             this.form.amount = 0;
                             this.form.expiration_date = '';
-                            this.form.is_active = true;
                             $('#client_id').val(null).trigger('change');
                             this.modal.show();
                             return;

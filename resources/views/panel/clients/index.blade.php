@@ -136,9 +136,9 @@
                         orderable: false,
                         render: function(data, type, row) {
                             return `<div class="d-flex">
-                                <button class="btn btn-xs btn-info mr-1 showModal" data-action="show"><i class="fas fa-eye"></i></button>
-                                <button class="btn btn-xs btn-warning mr-1 showModal" data-action="edit"><i class="fa fa-edit text-white"></i></button>
-                                <button class="btn btn-xs btn-danger deleteModal"><i class="fas fa-trash-alt text-white"></i></button>
+                                <button class="btn btn-xs btn-info mr-1 showModal" data-action="show" title="Ver Cliente"><i class="fas fa-eye"></i></button>
+                                <button class="btn btn-xs btn-warning mr-1 showModal" data-action="edit" title="Editar Cliente"><i class="fa fa-edit text-white"></i></button>
+                                <button class="btn btn-xs btn-danger deleteModal" title="Eliminar Cliente"><i class="fas fa-trash-alt text-white"></i></button>
                             </div>`;
                         }
                     },
@@ -229,6 +229,9 @@
 
                                         $('#datatable').DataTable().ajax.reload(
                                             null, false);
+                                    }).catch(error => {
+                                        Swal.fire('Error', error.response.data
+                                            .message, 'error');
                                     });
                             }
                         });

@@ -68,6 +68,12 @@ class ClientController extends Controller {
     }
 
     public function destroy(Client $client) {
+        if ($client->fises()->exists()) {
+            return response()->json([
+                'message' => 'El cliente no puede ser eliminado porque tiene fises asociados.',
+            ], 409);
+        }
+
         $client->delete();
 
         return response()->json([
