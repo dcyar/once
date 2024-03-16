@@ -18,6 +18,7 @@
                         <th>ID</th>
                         <th>Nombre</th>
                         <th>DNI</th>
+                        <th>FISES</th>
                         <th>Dirección</th>
                         <th>Teléfono</th>
                         <th>Acciones</th>
@@ -95,6 +96,7 @@
     <script>
         $(document).ready(function() {
             $('#datatable').DataTable({
+                responsive: true,
                 ajax: "{{ route('panel.clientes.ajax') }}",
                 columns: [{
                         data: 'id',
@@ -106,6 +108,17 @@
                     {
                         data: 'dni',
                         orderable: false
+                    },
+                    {
+                        data: 'fises_count',
+                        orderable: false,
+                        render: function(data, type, row) {
+                            return `
+                                <span class="badge badge-secondary">${data}</span>
+                                <span class="badge badge-success">${row.active_fises_count}</span>
+                                <span class="badge badge-danger">${row.used_fises_count}</span>
+                            `;
+                        }
                     },
                     {
                         data: 'address',

@@ -23,6 +23,7 @@ class ClientController extends Controller {
 
         $paginator = Client::query()
             ->select(['id', 'name', 'dni', 'address', 'phone'])
+            ->withCount(['fises', 'active_fises', 'used_fises'])
             ->when($search, function ($query, $search) {
                 $query->whereAny(['name', 'dni'], 'LIKE', "%{$search}%");
             })
@@ -33,7 +34,7 @@ class ClientController extends Controller {
             'draw'            => $request->integer('draw'),
             'recordsTotal'    => $paginator->total(),
             'recordsFiltered' => $paginator->total(),
-            'data'            => array_values($paginator->items()),
+            'data'            => $paginator->items(),
         ]);
     }
 

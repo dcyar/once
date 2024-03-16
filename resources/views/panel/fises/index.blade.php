@@ -105,6 +105,7 @@
     <script>
         $(document).ready(function() {
             $('#datatable').DataTable({
+                responsive: true,
                 ajax: "{{ route('panel.fises.ajax') }}",
                 columns: [{
                         data: 'id',

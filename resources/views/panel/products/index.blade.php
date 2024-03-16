@@ -95,6 +95,7 @@
     <script>
         $(document).ready(function() {
             $('#datatable').DataTable({
+                responsive: true,
                 ajax: "{{ route('panel.productos.ajax') }}",
                 columns: [{
                         data: 'id',
