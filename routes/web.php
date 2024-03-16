@@ -11,7 +11,8 @@ Route::get('/', function () {
 Route::middleware(['auth', 'verified'])->prefix('panel')->name('panel.')->group(function () {
     Route::view('/', 'dashboard')->name('dashboard');
 
-    Route::resource('productos', ProductController::class)->parameters(['productos' => 'product']);
+    Route::apiResource('/productos', ProductController::class)->parameters(['productos' => 'product']);
+    Route::get('/productos-ajax', [ProductController::class, 'ajax'])->name('productos.ajax');
 
     Route::get('/perfil', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -24,4 +25,4 @@ Route::middleware(['auth', 'verified'])->prefix('panel')->name('panel.')->group(
 //     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 // });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
