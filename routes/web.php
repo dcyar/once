@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Panel\ClientController;
+use App\Http\Controllers\Panel\DashboardController;
 use App\Http\Controllers\Panel\FiseController;
 use App\Http\Controllers\Panel\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -11,7 +12,7 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth', 'verified'])->prefix('panel')->name('panel.')->group(function () {
-    Route::view('/', 'dashboard')->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::apiResource('/productos', ProductController::class)->parameters(['productos' => 'product']);
     Route::get('/productos-ajax', [ProductController::class, 'ajax'])->name('productos.ajax');
