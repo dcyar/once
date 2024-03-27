@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->integer('amount');
             $table->date('expiration_date');
             $table->date('used_at')->nullable();
+            $table->text('notes')->nullable();
 
             $table->timestamps();
         });

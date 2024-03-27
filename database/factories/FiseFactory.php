@@ -19,7 +19,8 @@ class FiseFactory extends Factory {
             'code'            => $this->faker->unique()->numberBetween(100000000000, 999999999999),
             'amount'          => 25,
             'expiration_date' => $this->faker->dateTimeBetween('now', '+1 month'),
-            'used_at'         => $this->faker->boolean() ? $this->faker->dateTimeBetween('-2 week', 'now') : null,
+            'used_at'         => $this->faker->boolean(40) ? $this->faker->dateTimeBetween('-2 week', 'now') : null,
+            'notes'           => $this->faker->boolean(25) ? $this->faker->sentence() : null,
         ];
     }
 }

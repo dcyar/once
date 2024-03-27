@@ -15,6 +15,7 @@ class Fise extends Model {
         'amount',
         'expiration_date',
         'used_at',
+        'notes',
     ];
 
     protected function casts(): array {

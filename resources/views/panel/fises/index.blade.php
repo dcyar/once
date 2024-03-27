@@ -68,7 +68,6 @@
                                     <div class="invalid-feedback" x-text="errors.amount[0]"></div>
                                 </template>
                             </div>
-
                             <div class="form-group">
                                 <label for="expiration_date">Fecha de expiración:</label>
                                 <input x-model="form.expiration_date" type="date" class="form-control"
@@ -76,6 +75,13 @@
                                     name="expiration_date" :readonly="show" />
                                 <template x-if="errors?.expiration_date">
                                     <div class="invalid-feedback" x-text="errors.expiration_date[0]"></div>
+                                </template>
+                            </div>
+                            <div class="form-group">
+                                <label for="notes">Notas:</label>
+                                <textarea x-model="form.notes" class="form-control" :class="{ 'is-invalid': errors?.notes }" :readonly="show"></textarea>
+                                <template x-if="errors?.notes">
+                                    <div class="invalid-feedback" x-text="errors.notes[0]"></div>
                                 </template>
                             </div>
                             <div class="form-group">
@@ -191,6 +197,7 @@
                     amount: 0,
                     expiration_date: '',
                     is_active: false,
+                    notes: '',
                 },
                 errors: null,
                 init() {
@@ -210,6 +217,7 @@
                             this.form.client_id = '';
                             this.form.amount = 0;
                             this.form.expiration_date = '';
+                            this.form.notes = '';
                             $('#client_id').val(null).trigger('change');
                             this.modal.show();
                             return;
@@ -230,6 +238,7 @@
                         this.form.client_id = data.client.id;
                         this.form.expiration_date = data.expiration_date;
                         this.form.is_active = data.used_at ? true : false;
+                        this.form.notes = data.notes;
 
                         const clientOption = new Option(data.client.name, data.client.id, true,
                             true);
